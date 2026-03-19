@@ -1,4 +1,4 @@
-import { fetchcbsScores } from '@/lib/providers/cbs';
+import { fetchCbsScores } from '@/lib/providers/cbs';
 import { BRACKET_PICKS, PLAYER_FINALS } from '@/lib/bracket/picks';
 import { buildResultsFromLiveGames } from '@/lib/bracket/results';
 import { computeAliveEquity, rankScoredBrackets } from '@/lib/bracket/scoring';
