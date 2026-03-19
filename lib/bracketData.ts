@@ -1,4 +1,4 @@
-import { fetchNcaaScores } from '@/lib/providers/ncaa';
+import { fetchNcaaScores } from '@/lib/providers/cbs';
 import { BRACKET_PICKS, PLAYER_FINALS } from '@/lib/bracket/picks';
 import { buildResultsFromLiveGames } from '@/lib/bracket/results';
 import { computeAliveEquity, rankScoredBrackets } from '@/lib/bracket/scoring';
@@ -53,7 +53,7 @@ function buildScenarios(standings: StandingRow[]) {
     .sort((a, b) => b.pct - a.pct);
 }
 
-function buildWatchlist(games: Awaited<ReturnType<typeof fetchNcaaScores>>['games']) {
+function buildWatchlist(games: Awaited<ReturnType<typeof fetchCbsScores>>['games']) {
   return games.slice(0, 6).map((game) => ({
     time: game.clock || game.startTime || 'TBD',
     matchup: `${game.away} vs ${game.home}`,
@@ -68,7 +68,7 @@ function buildWatchlist(games: Awaited<ReturnType<typeof fetchNcaaScores>>['game
 }
 
 export async function getDashboardData() {
-  const scoreFeed = await fetchNcaaScores();
+  const scoreFeed = await fetchCbsScores();
   const results = buildResultsFromLiveGames(scoreFeed.games);
 
 const ranked =
@@ -134,7 +134,7 @@ const standings: StandingRow[] = normalizedRanked.map((row) => {
     games: scoreFeed.games ??[],
     dataSources: [
       { label: 'Dashboard API', url: '/api/dashboard', state: 'Connected' },
-      { label: 'NCAA scoreboard', url: 'https://www.ncaa.com/scoreboard/basketball-men/d1', state: 'Connected' },
+      { label: 'CBS scoreboard', url: 'https://www.cbssports.com/college-basketball/scoreboard/', state: 'Connected' },
       { label: 'Bracket Picks', url: 'lib/bracket/picks.ts', state: 'Local' },
     ],
   };
