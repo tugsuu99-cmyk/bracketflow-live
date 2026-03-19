@@ -96,9 +96,18 @@ export async function fetchNcaaScores(): Promise<ScoreProviderResult> {
     new Map(games.map((game) => [`${game.away}-${game.home}`, game])).values()
   );
 
-  return {
-    games: deduped,
-    fetchedAt: new Date().toISOString(),
-    sourceLabel: 'NCAA scoreboard',
-  };
+const cleanGames = deduped.filter(
+  (game) =>
+    game.home &&
+    game.away &&
+    game.home !== game.away &&
+    game.home.length > 1 &&
+    game.away.length > 1
+);
+
+return {
+  games: cleanGames,
+  fetchedAt: new Date().toISOString(),
+  sourceLabel: 'NCAA scoreboard',
+};
 }

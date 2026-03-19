@@ -269,29 +269,35 @@ export default function Home() {
                 <div className="text-sm text-white/50">Current scoreboard feed</div>
               </div>
             </div>
-            <div className="space-y-3">
-              {data.games.map((game) => (
-                <div
-                  key={game.id}
-                  className="flex items-center justify-between rounded-2xl bg-black/20 p-4 ring-1 ring-white/10"
-                >
-                  <div>
-                    <div className="text-lg font-medium">
-                      {game.away} vs {game.home}
-                    </div>
-                    <div className="mt-1 text-sm text-cyan-200">
-                      {game.awayScore == null
-                        ? 'Upcoming'
-                        : `${game.away} ${game.awayScore} · ${game.home} ${game.homeScore}`}
-                    </div>
-                  </div>
-                  <div className="rounded-full bg-blue-500/15 px-3 py-2 text-sm text-blue-200 ring-1 ring-blue-400/20">
-                    <Activity className="mr-2 inline-block h-4 w-4" />
-                    {game.status}
-                  </div>
-                </div>
-              ))}
-            </div>
+           <div className="space-y-3">
+  {data.games && data.games.length > 0 ? (
+    data.games.map((game) => (
+      <div
+        key={game.id}
+        className="flex items-center justify-between rounded-2xl bg-black/20 p-4 ring-1 ring-white/10"
+      >
+        <div>
+          <div className="text-lg font-medium">
+            {game.away} vs {game.home}
+          </div>
+          <div className="mt-1 text-sm text-cyan-200">
+            {game.awayScore == null || game.homeScore == null
+              ? 'Upcoming'
+              : `${game.away} ${game.awayScore} · ${game.home} ${game.homeScore}`}
+          </div>
+        </div>
+        <div className="rounded-full bg-blue-500/15 px-3 py-2 text-sm text-blue-200 ring-1 ring-blue-400/20">
+          <Activity className="mr-2 inline-block h-4 w-4" />
+          {game.status}
+        </div>
+      </div>
+    ))
+  ) : (
+    <div className="rounded-2xl bg-black/20 p-4 ring-1 ring-white/10 text-white/60">
+      No live games detected from feed
+    </div>
+  )}
+</div>
           </Panel>
 
           <Panel className="p-6">

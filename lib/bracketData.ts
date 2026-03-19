@@ -109,8 +109,8 @@ export async function getDashboardData() {
     ],
     scenarios: buildScenarios(standings),
     compareTG: buildCompareTG(),
-    watchlist: buildWatchlist(scoreFeed.games),
-    games: scoreFeed.games,
+    watchlist: buildWatchlist(scoreFeed.games ??[]),
+    games: scoreFeed.games ??[],
     dataSources: [
       { label: 'Dashboard API', url: '/api/dashboard', state: 'Connected' },
       { label: 'NCAA scoreboard', url: 'https://www.ncaa.com/scoreboard/basketball-men/d1', state: 'Connected' },
