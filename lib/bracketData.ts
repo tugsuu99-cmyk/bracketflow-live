@@ -71,9 +71,27 @@ export async function getDashboardData() {
   const scoreFeed = await fetchNcaaScores();
   const results = buildResultsFromLiveGames(scoreFeed.games);
 
-  const ranked = rankScoredBrackets(BRACKET_PICKS, results, oddsByPlayer);
+const ranked =
+  results.length > 0
+    ? rankScoredBrackets(BRACKET_PICKS, results, oddsByPlayer)
+    : BRACKET_PICKS.map((pick, index) => ({
+        player: pick.player,
+        odds: oddsByPlayer[pick.player as keyof typeof oddsByPlayer] ?? 0,
+        rank: index + 1,
+        currentPoints: 0,
+        maxPoints: 0,
+        correctByRound: { R64: 0, R32: 0, S16: 0, E8: 0, F4: 0, CHAMP: 0 },
+        missedByRound: { R64: 0, R32: 0, S16: 0, E8: 0, F4: 0, CHAMP: 0 },
+        aliveByRound: { R64: 0, R32: 0, S16: 0, E8: 0, F4: 0, CHAMP: 0 },
+        deadChampion: false,
+      })).sort((a, b) => b.odds - a.odds);
 
-  const standings: StandingRow[] = ranked.map((row) => {
+const normalizedRanked = ranked.map((row, index) => ({
+  ...row,
+  rank: index + 1,
+}));
+
+const standings: StandingRow[] = normalizedRanked.map((row) => {
     const bracket = BRACKET_PICKS.find((p) => p.player === row.player);
     return {
       name: row.player,
@@ -91,7 +109,10 @@ export async function getDashboardData() {
   return {
     meta: {
       title: 'BracketFlow Live',
-      subtitle: `${scoreFeed.sourceLabel} connected`,
+      subtitle:
+  scoreFeed.games.length > 0
+    ? `${scoreFeed.sourceLabel} connected`
+    : `${scoreFeed.sourceLabel} connected · no live games found`,
       refreshSeconds: 30,
       lastUpdated: scoreFeed.fetchedAt,
       connected: true,
